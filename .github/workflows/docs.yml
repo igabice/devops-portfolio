@@ -1,0 +1,42 @@
+name: Terraform CI
+
+on:
+  pull_request:
+    paths:
+      - "**.tf"
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 1-tf-aws-vpc-module
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: latest
+
+      - name: terraform fmt check
+        run: terraform fmt -check -recursive .
+
+      - name: terraform init & validate
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+  docs:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 1-tf-aws-vpc-module
+    needs: [validate]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: terraform-docs/gh-actions@v1.0.0
+        with:
+          working-directory: 1-tf-aws-vpc-module
+          output-file: README.md
+          output-mode: replace

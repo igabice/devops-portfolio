@@ -1,0 +1,19 @@
+formatter: "markdown table"
+
+version: ""
+
+header-from: "main.tf"
+footer-from: ""
+
+sections:
+  hide: []
+  show: []
+
+content: |-
+  <!-- BEGIN_TF_DOCS -->
+  {{ .Content }}
+  <!-- END_TF_DOCS -->
+
+output:
+  file: "README.md"
+  mode: "replace"
